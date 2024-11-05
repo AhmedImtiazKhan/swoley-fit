@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import SectionWrapper from "./SectionWrapper";
 import { WORKOUTS } from "../utils/swoldier";
 
@@ -19,6 +19,12 @@ function Header(props) {
 }
 
 export default function Generator(props) {
+  const [showModal, setShowModal] = useState(false);
+
+  function toggleModal() {
+    setShowModal(!showModal);
+  }
+
   return (
     <SectionWrapper
       id={"generate"}
@@ -37,10 +43,29 @@ export default function Generator(props) {
               className="bg-slate-950 border border-blue-400 duration-200 hover:border-blue-600 py-3 rounded-lg"
               key={typeindex}
             >
-              {type}
+              <p className="capitalize">{type.replaceAll("_", " ")}</p>
             </button>
           );
         })}
+      </div>
+      <Header
+        index={"02"}
+        title={"Lock on targets"}
+        description={"Select the muscles judged for annhilation."}
+      />
+      <div className="bg-slate-950  border border-solid border-blue-400 rounded-lg flex flex-col">
+        <button
+          onClick={toggleModal}
+          className="relative flex items-center justify-center"
+        >
+          <p>Select Muscle Groups</p>
+          <i className="fa-solid absolute py-3 right-3 top-1/2 -translate-y-1/2 fa-caret-down"></i>
+        </button>
+        {showModal && (
+          <div className="bg-slate-950 border border-blue-400 rounded-lg">
+            <p>Modal</p>
+          </div>
+        )}
       </div>
     </SectionWrapper>
   );
