@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import SectionWrapper from "./SectionWrapper";
-import { WORKOUTS } from "../utils/swoldier";
+import { SCHEMES, WORKOUTS } from "../utils/swoldier";
 
 function Header(props) {
   const { index, description, title } = props;
@@ -20,6 +20,9 @@ function Header(props) {
 
 export default function Generator(props) {
   const [showModal, setShowModal] = useState(false);
+  const [poison, setPoison] = useState("individual");
+  const [muscles, setMuscles] = useState([]);
+  const [goal, setGoals] = useState("strength_power");
 
   function toggleModal() {
     setShowModal(!showModal);
@@ -36,12 +39,19 @@ export default function Generator(props) {
         title={"Pick your poison"}
         description={"Select the workout you wish to endure."}
       />
-      <div className="flex flex-col gap-4">
-        {Object.keys(WORKOUTS).map((type, typeindex) => {
+      <div className="grid grid-cols-3 gap-4">
+        {Object.keys(WORKOUTS).map((type, typeIndex) => {
           return (
             <button
-              className="bg-slate-950 border border-blue-400 duration-200 hover:border-blue-600 py-3 rounded-lg"
-              key={typeindex}
+              onClick={() => {
+                setMuscles([]);
+                setPoison(type);
+              }}
+              className={
+                "bg-slate-950 border  duration-200 px-4 hover:border-blue-600 py-3 rounded-lg " +
+                (type === poison ? " border-blue-600" : " border-blue-400")
+              }
+              key={typeIndex}
             >
               <p className="capitalize">{type.replaceAll("_", " ")}</p>
             </button>
@@ -62,10 +72,52 @@ export default function Generator(props) {
           <i className="fa-solid absolute py-3 right-3 top-1/2 -translate-y-1/2 fa-caret-down"></i>
         </button>
         {showModal && (
-          <div className="bg-slate-950 border border-blue-400 rounded-lg">
-            <p>Modal</p>
+          <div className="flex flex-col px-3 pb-3">
+            {(poison === "individual"
+              ? WORKOUTS[poison]
+              : Object.keys(WORKOUTS[poison])
+            ).map((muscleGroup, muscleGroupIndex) => {
+              return (
+                <button
+                  onClick={() => {
+                    updateMuscles(muscleGroup);
+                  }}
+                  key={muscleGroupIndex}
+                  className={
+                    "hover:text-blue-400 duration-200 " +
+                    (muscles.includes(muscleGroup) ? " text-blue-400" : " ")
+                  }
+                >
+                  <p className="uppercase">
+                    {muscleGroup.replaceAll("_", " ")}
+                  </p>
+                </button>
+              );
+            })}
           </div>
         )}
+      </div>
+
+      <Header
+        index={"03"}
+        title={"Become a legend"}
+        description={"Select your ultimate objective."}
+      />
+      <div className="grid grid-col-3 gap-4">
+        {Object.keys(SCHEMES).map((scheme, schemeIndex) => {
+          return (
+            <button
+              onClick={() => setGoals(scheme)}
+              className={
+                "bg-slate-950 border  duration-200 px-4 hover:border-blue-600 py-3 rounded-lg " +
+                (scheme === goal ? " border-blue-600" : " border-blue-400")
+              }
+              key={schemeIndex}
+            >
+              <p className="capitalize">{scheme.replaceAll("_", " ")}</p>
+            </button>
+          );
+        })}
       </div>
     </SectionWrapper>
   );
