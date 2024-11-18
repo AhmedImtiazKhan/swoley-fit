@@ -28,6 +28,29 @@ export default function Generator(props) {
     setShowModal(!showModal);
   }
 
+  function updateMuscles(muscleGroup) {
+    if (muscles.includes(muscleGroup)) {
+      setMuscles(muscles.filter((val) => val !== muscleGroup));
+      return;
+    }
+
+    if (muscles.length > 2) {
+      return;
+    }
+
+    if (poison !== "individual") {
+      setMuscles([muscleGroup]);
+      setShowModal(false); // Modal closes for non-individual poison.
+      return;
+    }
+
+    setMuscles([...muscles, muscleGroup]); // Append new muscles for 'individual'.
+    if (muscles.length === 2) {
+      // Check if max limit (3) is reached.
+      setShowModal(false); // Close the modal when 3 muscles are selected.
+    }
+  }
+
   return (
     <SectionWrapper
       id={"generate"}
@@ -68,7 +91,9 @@ export default function Generator(props) {
           onClick={toggleModal}
           className="relative flex items-center justify-center"
         >
-          <p>Select Muscle Groups</p>
+          <p className="capitalize">
+            {muscles.length == 0 ? "Select Muscle Groups" : muscles.join(" ")}
+          </p>
           <i className="fa-solid absolute py-3 right-3 top-1/2 -translate-y-1/2 fa-caret-down"></i>
         </button>
         {showModal && (
@@ -103,7 +128,7 @@ export default function Generator(props) {
         title={"Become a legend"}
         description={"Select your ultimate objective."}
       />
-      <div className="grid grid-col-3 gap-4">
+      <div className="grid grid-cols-3 gap-4">
         {Object.keys(SCHEMES).map((scheme, schemeIndex) => {
           return (
             <button
