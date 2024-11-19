@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import SectionWrapper from "./SectionWrapper";
 import { SCHEMES, WORKOUTS } from "../utils/swoldier";
+import Button from "./Button";
 
 function Header(props) {
-  const { index, description, title } = props;
-
+  const { index, title, description } = props;
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-center gap-2">
-        <p className="text-3xl sm:text-4xl md:text-5xl font-semibold text-slate-400 ">
+        <p className="text-3xl sm:text-4xl md:text-5xl font-semibold text-slate-400">
           {index}
         </p>
         <h4 className="text-xl sm:text-2xl md:text-3xl">{title}</h4>
@@ -19,10 +19,18 @@ function Header(props) {
 }
 
 export default function Generator(props) {
+  const {
+    muscles,
+    setMuscles,
+    poison,
+    setPoison,
+    goal,
+    setGoal,
+    updateWorkout,
+  } = props;
   const [showModal, setShowModal] = useState(false);
-  const [poison, setPoison] = useState("individual");
-  const [muscles, setMuscles] = useState([]);
-  const [goal, setGoals] = useState("strength_power");
+
+  // let showModal = false
 
   function toggleModal() {
     setShowModal(!showModal);
@@ -40,14 +48,13 @@ export default function Generator(props) {
 
     if (poison !== "individual") {
       setMuscles([muscleGroup]);
-      setShowModal(false); // Modal closes for non-individual poison.
+      setShowModal(false);
       return;
     }
 
-    setMuscles([...muscles, muscleGroup]); // Append new muscles for 'individual'.
+    setMuscles([...muscles, muscleGroup]);
     if (muscles.length === 2) {
-      // Check if max limit (3) is reached.
-      setShowModal(false); // Close the modal when 3 muscles are selected.
+      setShowModal(false);
     }
   }
 
@@ -62,7 +69,7 @@ export default function Generator(props) {
         title={"Pick your poison"}
         description={"Select the workout you wish to endure."}
       />
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         {Object.keys(WORKOUTS).map((type, typeIndex) => {
           return (
             <button
@@ -84,17 +91,17 @@ export default function Generator(props) {
       <Header
         index={"02"}
         title={"Lock on targets"}
-        description={"Select the muscles judged for annhilation."}
+        description={"Select the muscles judged for annihilation."}
       />
       <div className="bg-slate-950  border border-solid border-blue-400 rounded-lg flex flex-col">
         <button
           onClick={toggleModal}
-          className="relative flex items-center justify-center"
+          className="relative p-3 flex items-center justify-center"
         >
           <p className="capitalize">
-            {muscles.length == 0 ? "Select Muscle Groups" : muscles.join(" ")}
+            {muscles.length == 0 ? "Select muscle groups" : muscles.join(" ")}
           </p>
-          <i className="fa-solid absolute py-3 right-3 top-1/2 -translate-y-1/2 fa-caret-down"></i>
+          <i className="fa-solid absolute right-3 top-1/2 -translate-y-1/2 fa-caret-down"></i>
         </button>
         {showModal && (
           <div className="flex flex-col px-3 pb-3">
@@ -122,19 +129,20 @@ export default function Generator(props) {
           </div>
         )}
       </div>
-
       <Header
         index={"03"}
-        title={"Become a legend"}
+        title={"Become Juggernaut"}
         description={"Select your ultimate objective."}
       />
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {Object.keys(SCHEMES).map((scheme, schemeIndex) => {
           return (
             <button
-              onClick={() => setGoals(scheme)}
+              onClick={() => {
+                setGoal(scheme);
+              }}
               className={
-                "bg-slate-950 border  duration-200 px-4 hover:border-blue-600 py-3 rounded-lg " +
+                "bg-slate-950 border  duration-200 hover:border-blue-600 py-3 rounded-lg px-4 " +
                 (scheme === goal ? " border-blue-600" : " border-blue-400")
               }
               key={schemeIndex}
@@ -144,6 +152,7 @@ export default function Generator(props) {
           );
         })}
       </div>
+      <Button func={updateWorkout} text={"Formulate"}></Button>
     </SectionWrapper>
   );
 }
