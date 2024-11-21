@@ -7,10 +7,10 @@
     font-family: "Poppins", sans-serif;
 }
 
-*span{
+//*span{
     font-family: inherit;
     font-weight: inherit;
-}
+}*/
 
 .blueShadow{
     box-shadow: 3px 3px 0 0 #60a5fa;
