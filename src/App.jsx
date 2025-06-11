@@ -2,6 +2,8 @@ import { useState } from "react";
 import Hero from "./components/Hero";
 import Generator from "./components/Generator";
 import Workout from "./components/Workout";
+import AIChat from "./components/AIChat";
+import AIInsights from "./components/AIInsights";
 import { generateWorkout } from "./utils/functions";
 
 function App() {
@@ -35,7 +37,13 @@ function App() {
         setGoal={setGoal}
         updateWorkout={updateWorkout}
       />
-      {workout && <Workout workout={workout} />}
+      {workout && (
+        <>
+          <Workout workout={workout} />
+          <AIInsights workout={workout} muscles={muscles} goal={goal} />
+        </>
+      )}
+      <AIChat />
     </main>
   );
 }
